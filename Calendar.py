@@ -7,6 +7,7 @@ from PIL import ImageTk,Image
 
 root = tk.Tk()
 root.title("2020 Calendar")
+root.geometry("708x629")
 
 for x in range(1, 13):
 	command = "frame{} = tk.Frame(root)".format(x)
@@ -101,11 +102,12 @@ class create_days:
 		frame1 = tk.Frame(popup)
 		frame2 = tk.Frame(popup)
 
-		def switch_to_1():
+		def switch_to_1(colour):
 			save_data()
 			frame2.pack_forget()
 			frame1.pack()
-			print(month_colours)
+			command5 = "day_{}.button.configure(bg = '{}')".format(day_num, new_colour)
+			exec(command5)
 
 		def switch_to_2():
 			frame1.pack_forget()
@@ -125,7 +127,7 @@ class create_days:
 		note = tk.Label(textbox, wraplength=340, justify=tk.LEFT, text=(day_notes[day_num - 1]))
 		note.pack()
 
-		edit_button = tk.Button(frame1, command=lambda:switch_to_2(), padx=8, pady=3, text="Edit", bg="gray91")
+		edit_button = tk.Button(frame1, command=lambda:switch_to_2(), padx=8, text="Edit", bg="gray91",  font='Helvetica 11 bold')
 		edit_button.grid(row=4, column=0, pady=10, columnspan=2, sticky=tk.W)
 
 		frame1.pack()
@@ -133,17 +135,21 @@ class create_days:
 		def select_colour(colour):
 			global selecter_pos
 			global month_colours
+			global new_colour
 			if colour == 'red' and num_in_month not in month_colours[(month_num - 1)][0]:
 				month_colours[(month_num - 1)][0].append(num_in_month)
 				selecter_pos = 0
+				new_colour = 'red'
 
-			elif colour == 'green' and num_in_month not in month_colours[(month_num - 1)][1]:
+			elif colour == 'yellow green' and num_in_month not in month_colours[(month_num - 1)][1]:
 				month_colours[(month_num - 1)][1].append(num_in_month)
 				selecter_pos = 1
+				new_colour = 'yellow green'
 
-			elif colour == 'blue' and num_in_month not in month_colours[(month_num - 1)][2]:
+			elif colour == 'cyan' and num_in_month not in month_colours[(month_num - 1)][2]:
 				month_colours[(month_num - 1)][2].append(num_in_month)
 				selecter_pos =2
+				new_colour = 'cyan'
 
 			elif colour == 'gray91':
 				if num_in_month in month_colours[(month_num - 1)][0]:
@@ -153,6 +159,7 @@ class create_days:
 				if num_in_month in month_colours[(month_num - 1)][2]:
 					month_colours[(month_num - 1)][2].remove(num_in_month)
 				selecter_pos = 3
+				new_colour = 'gray91'
 
 			selecter.grid_forget()
 			selecter.grid(row=0, column=selecter_pos)
@@ -163,9 +170,9 @@ class create_days:
 
 		colour1_button = tk.Button(colour_box, padx=10, bg="red", command=lambda:select_colour('red'))
 		colour1_button.grid(row=1, column=0)
-		colour2_button = tk.Button(colour_box, padx=10, bg="green", command=lambda:select_colour('green'))
+		colour2_button = tk.Button(colour_box, padx=10, bg="yellow green", command=lambda:select_colour('yellow green'))
 		colour2_button.grid(row=1, column=1)
-		colour3_button = tk.Button(colour_box, padx=10, bg="blue", command=lambda:select_colour('blue'))
+		colour3_button = tk.Button(colour_box, padx=10, bg="cyan", command=lambda:select_colour('cyan'))
 		colour3_button.grid(row=1, column=2)
 		colour4_button = tk.Button(colour_box, padx=10, bg="gray91", command=lambda:select_colour('gray91'))
 		colour4_button.grid(row=1, column=3)
@@ -177,7 +184,7 @@ class create_days:
 		colour_box.grid(row=3, column=0)
 
 
-		save_button = tk.Button(frame2, command=lambda:switch_to_1())
+		save_button = tk.Button(frame2, text="Save",  font='Helvetica 11 bold', command=lambda:switch_to_1(new_colour), padx=5)
 		save_button.grid(row=4, column=0)
 
 
@@ -199,18 +206,22 @@ class create_months:
 			exec(command, globals())
 			day_count += 1
 
-january = create_months(31, 3, 1, 1)
-febuary = create_months(29, 6, 2, 32)
-march = create_months(31, 0, 3, 61)
-april = create_months(30, 3, 4, 92)
-may = create_months(31, 5, 5, 122)
-june = create_months(30, 1, 6, 153)
-july = create_months(31, 3, 7, 183)
-august = create_months(31, 6, 8, 213)
-september = create_months(30, 2, 9, 245)
-october = create_months(31, 4, 10, 275)
-november = create_months(30, 0, 11, 306)
-december = create_months(31, 2, 12, 336)
+def init_months():
+	global january, febuary, march, april, may, june, july, august, september, october, november, december
+
+	january = create_months(31, 3, 1, 1)
+	febuary = create_months(29, 6, 2, 32)
+	march = create_months(31, 0, 3, 61)
+	april = create_months(30, 3, 4, 92)
+	may = create_months(31, 5, 5, 122)
+	june = create_months(30, 1, 6, 153)
+	july = create_months(31, 3, 7, 183)
+	august = create_months(31, 6, 8, 213)
+	september = create_months(30, 2, 9, 245)
+	october = create_months(31, 4, 10, 275)
+	november = create_months(30, 0, 11, 306)
+	december = create_months(31, 2, 12, 336)
+init_months()
 
 heading = tk.Label(root, font='Helvetica 22 bold', text="2020", pady=10)
 heading.grid(row=0, column=1, columnspan=3)
@@ -248,6 +259,7 @@ choices = ["January", "Febuary", "March", "April", "May", "June", "July", "Augus
 month_choice = tk.StringVar()
 month_choice.set(choices[0])
 choose_month = tk.OptionMenu(root, month_choice, *choices, command=update_month)
+choose_month['menu'].configure(font=('Futura',12))
 choose_month.grid(row=0, column=0, sticky=tk.W+tk.N)
 
 def place_days(start_pos, start_day, num_of_days):
@@ -270,10 +282,6 @@ for x in month_nums:
 	month = month_nums.get(x).lower()
 	command = "place_days({}.start_pos, {}.start_day, {}.num_of_days)".format(month, month, month)
 	exec(command)
-
-
-
-
 
 
 
