@@ -77,6 +77,8 @@ class create_days:
 		frame = "frame{}".format(month_num)
 
 		if month_num == int(currentMonth) and num_in_month == int(currentDay):
+			global today
+			today = self.num
 			command = f"self.button = tk.Button({frame}, font='Helvetica 16 bold', wraplength=80, height=3, width=7, text='{num_in_month}      Today', bg='yellow', command=lambda: create_days.button_click({num_in_month}, {self.col}, {self.month_num}, {self.num}))"
 		else:
 			command = f"self.button = tk.Button({frame}, font='Helvetica 16 bold', height=3, width=7, text={num_in_month}, bg='{self.colour}', command=lambda: create_days.button_click({num_in_month}, {self.col}, {self.month_num}, {self.num}))"
@@ -85,6 +87,8 @@ class create_days:
 
 	@staticmethod
 	def button_click(num_in_month, col, month_num, day_num):
+		global new_colour
+		new_colour = None
 		global selecter_pos
 		if num_in_month in month_colours[(month_num - 1)][0]:
 			selecter_pos = 0
@@ -106,8 +110,11 @@ class create_days:
 			save_data()
 			frame2.pack_forget()
 			frame1.pack()
-			command5 = "day_{}.button.configure(bg = '{}')".format(day_num, new_colour)
-			exec(command5)
+			if new_colour:
+				global today
+				if day_num != today:
+					command5 = "day_{}.button.configure(bg = '{}')".format(day_num, new_colour)
+					exec(command5)
 
 		def switch_to_2():
 			frame1.pack_forget()
@@ -140,16 +147,28 @@ class create_days:
 				month_colours[(month_num - 1)][0].append(num_in_month)
 				selecter_pos = 0
 				new_colour = 'red'
+				if num_in_month in month_colours[(month_num - 1)][1]:
+					month_colours[(month_num - 1)][1].remove(num_in_month)
+				if num_in_month in month_colours[(month_num - 1)][2]:
+					month_colours[(month_num - 1)][2].remove(num_in_month)
 
-			elif colour == 'yellow green' and num_in_month not in month_colours[(month_num - 1)][1]:
+			elif colour == 'green yellow' and num_in_month not in month_colours[(month_num - 1)][1]:
 				month_colours[(month_num - 1)][1].append(num_in_month)
 				selecter_pos = 1
-				new_colour = 'yellow green'
+				new_colour = 'green yellow'
+				if num_in_month in month_colours[(month_num - 1)][0]:
+					month_colours[(month_num - 1)][0].remove(num_in_month)
+				if num_in_month in month_colours[(month_num - 1)][2]:
+					month_colours[(month_num - 1)][2].remove(num_in_month)
 
 			elif colour == 'cyan' and num_in_month not in month_colours[(month_num - 1)][2]:
 				month_colours[(month_num - 1)][2].append(num_in_month)
 				selecter_pos =2
 				new_colour = 'cyan'
+				if num_in_month in month_colours[(month_num - 1)][0]:
+					month_colours[(month_num - 1)][0].remove(num_in_month)
+				if num_in_month in month_colours[(month_num - 1)][1]:
+					month_colours[(month_num - 1)][1].remove(num_in_month)
 
 			elif colour == 'gray91':
 				if num_in_month in month_colours[(month_num - 1)][0]:
@@ -164,13 +183,10 @@ class create_days:
 			selecter.grid_forget()
 			selecter.grid(row=0, column=selecter_pos)
 
-
-
 		colour_box = tk.Frame(frame2)
-
 		colour1_button = tk.Button(colour_box, padx=10, bg="red", command=lambda:select_colour('red'))
 		colour1_button.grid(row=1, column=0)
-		colour2_button = tk.Button(colour_box, padx=10, bg="yellow green", command=lambda:select_colour('yellow green'))
+		colour2_button = tk.Button(colour_box, padx=10, bg="green yellow", command=lambda:select_colour('green yellow'))
 		colour2_button.grid(row=1, column=1)
 		colour3_button = tk.Button(colour_box, padx=10, bg="cyan", command=lambda:select_colour('cyan'))
 		colour3_button.grid(row=1, column=2)
@@ -180,8 +196,14 @@ class create_days:
 		# arrow_icon = ImageTk.PhotoImage(Image.open("lib/arrow.png"))
 		selecter = tk.Label(colour_box, text="^")
 		selecter.grid(row=0, column=selecter_pos)
-
 		colour_box.grid(row=3, column=0)
+
+
+		# input_box = tk.Entry(frame2, width=3)
+		# input_box.delete(0, 'end')
+
+
+
 
 
 		save_button = tk.Button(frame2, text="Save",  font='Helvetica 11 bold', command=lambda:switch_to_1(new_colour), padx=5)
@@ -259,6 +281,7 @@ choices = ["January", "Febuary", "March", "April", "May", "June", "July", "Augus
 month_choice = tk.StringVar()
 month_choice.set(choices[0])
 choose_month = tk.OptionMenu(root, month_choice, *choices, command=update_month)
+choose_month.config(font='Helvetica 12 bold', width=9)
 choose_month['menu'].configure(font=('Futura',12))
 choose_month.grid(row=0, column=0, sticky=tk.W+tk.N)
 
@@ -282,7 +305,6 @@ for x in month_nums:
 	month = month_nums.get(x).lower()
 	command = "place_days({}.start_pos, {}.start_day, {}.num_of_days)".format(month, month, month)
 	exec(command)
-
 
 
 current_frame = int(currentMonth)
