@@ -44,10 +44,10 @@ weekdays = {
 	6:"Saturday"
 }
 
-
 with open("data", 'rb') as file:
 	month_colours, day_notes = pickle.load(file)
 
+# # Clear variables
 # month_colours = [[[], [], []], [[], [], []], [[], [], []], [[], [], []], [[], [], []], [[], [], []], [[], [], []], [[], [], []], [[], [], []], [[], [], []], [[], [], []], [[] ,[] ,[]]]
 # day_notes = [[], [], [], [], [], [], [], []]
 # for i in range(0, 8):
@@ -84,7 +84,6 @@ class create_days:
 		else:
 			command = f"self.button = tk.Button({frame}, font='Helvetica 16 bold', height=3, width=7, text={num_in_month}, bg='{self.colour}', command=lambda: create_days.button_click({num_in_month}, {self.col}, {self.month_num}, {self.num}))"
 		exec(command)
-
 
 	@staticmethod
 	def button_click(num_in_month, col, month_num, day_num):
@@ -199,10 +198,9 @@ class create_days:
 		colour4_button.grid(row=1, column=3)
 
 		# arrow_icon = ImageTk.PhotoImage(Image.open("lib/arrow.png"))
-		selecter = tk.Label(colour_box, text="^")
+		selecter = tk.Label(colour_box, text='⬇')
 		selecter.grid(row=0, column=selecter_pos)
-		colour_box.grid(row=3, column=0)
-
+		colour_box.grid(row=10, column=0, pady=10, sticky=tk.N)
 
 		def validate(inp):
 			if inp is "":
@@ -213,51 +211,36 @@ class create_days:
 				return False
 
 		input_box1 = tk.Entry(frame2, width=54)
-		input_box1.grid(row=5, column=0)
+		input_box1.grid(row=2, column=0, columnspan=3)
 		input_box2 = tk.Entry(frame2, width=54)
-		input_box2.grid(row=6, column=0)
+		input_box2.grid(row=3, column=0, columnspan=3)
 		input_box3 = tk.Entry(frame2, width=54)
-		input_box3.grid(row=7, column=0)
+		input_box3.grid(row=4, column=0, columnspan=3)
 		input_box4 = tk.Entry(frame2, width=54)
-		input_box4.grid(row=8, column=0)
+		input_box4.grid(row=5, column=0, columnspan=3)
 		input_box5 = tk.Entry(frame2, width=54)
-		input_box5.grid(row=9, column=0)
+		input_box5.grid(row=6, column=0, columnspan=3)
 		input_box6 = tk.Entry(frame2, width=54)
-		input_box6.grid(row=10, column=0)
+		input_box6.grid(row=7, column=0, columnspan=3)
 		input_box7 = tk.Entry(frame2, width=54)
-		input_box7.grid(row=11, column=0)
+		input_box7.grid(row=8, column=0, columnspan=3)
 		input_box8 = tk.Entry(frame2, width=54)
-		input_box8.grid(row=12, column=0)
+		input_box8.grid(row=9, column=0, columnspan=3)
 
 		reg = frame2.register(validate)
 
-		input_box1.config(validate="key", validatecommand=(reg, "%P"))
-		input_box2.config(validate="key", validatecommand=(reg, "%P"))
-		input_box3.config(validate="key", validatecommand=(reg, "%P"))
-		input_box4.config(validate="key", validatecommand=(reg, "%P"))
-		input_box5.config(validate="key", validatecommand=(reg, "%P"))
-		input_box6.config(validate="key", validatecommand=(reg, "%P"))
-		input_box7.config(validate="key", validatecommand=(reg, "%P"))
-		input_box8.config(validate="key", validatecommand=(reg, "%P"))
+		for x in range(1, 9):
+			command4 = "input_box{}.config(validate='key', validatecommand=(reg, '%P'))".format(x)
+			exec(command4)
 
-		text1 = day_notes[0][(day_num - 1)].strip()
-		text2 = day_notes[1][(day_num - 1)].strip()
-		text3 = day_notes[2][(day_num - 1)].strip()
-		text4 = day_notes[3][(day_num - 1)].strip()
-		text5 = day_notes[4][(day_num - 1)].strip()
-		text6 = day_notes[5][(day_num - 1)].strip()
-		text7 = day_notes[6][(day_num - 1)].strip()
-		text8 = day_notes[7][(day_num - 1)].strip()
-
-		input_box1.insert(0, text1)
-		input_box2.insert(0, text2)
-		input_box3.insert(0, text3)
-		input_box4.insert(0, text4)
-		input_box5.insert(0, text5)
-		input_box6.insert(0, text6)
-		input_box7.insert(0, text7)
-		input_box8.insert(0, text8)
+		for x in (range(1, 9)):
+			command5 = "text{} = day_notes[{}][(day_num - 1)].strip()".format(x, (x - 1))
+			exec(command5)
 		
+		for x in range(1, 9):
+			command2 = "input_box{}.insert(0, text{})".format(x, x)
+			exec(command2)	
+
 		def write_note_text():
 			text1 = input_box1.get() + "\n"
 			text2 = input_box2.get() + "\n"
@@ -280,8 +263,25 @@ class create_days:
 			note_text = day_notes[0][(day_num - 1)] + day_notes[1][(day_num - 1)] + day_notes[2][(day_num - 1)] + day_notes[3][(day_num - 1)] + day_notes[4][(day_num - 1)] + day_notes[5][(day_num - 1)] + day_notes[6][(day_num - 1)] + day_notes[7][(day_num - 1)]
 			note.config(text=note_text)
 
-		save_button = tk.Button(frame2, text="Save",  font='Helvetica 11 bold', command=lambda:[write_note_text(), switch_to_1(new_colour)], padx=5)
-		save_button.grid(row=4, column=0)
+		heading2 = tk.Label(frame2, text="Enter Notes", font='Helvetica 11 bold')
+		heading2.grid(row=0, column=0, columnspan=3, pady=10)
+
+		def clear_entrys():
+			input_box1.delete(0, 'end')
+			input_box2.delete(0, 'end')
+			input_box3.delete(0, 'end')
+			input_box4.delete(0, 'end')
+			input_box5.delete(0, 'end')
+			input_box6.delete(0, 'end')
+			input_box7.delete(0, 'end')
+			input_box8.delete(0, 'end')
+			select_colour('gray91')
+
+		clear_button = tk.Button(frame2, text="clear", font='Helvetica 11 bold', command=lambda:clear_entrys(), padx=5, bg='gray91')
+		clear_button.grid(row=10, column=1, sticky=tk.E, pady=10)
+
+		save_button = tk.Button(frame2, text="Save",  font='Helvetica 11 bold', command=lambda:[write_note_text(), switch_to_1(new_colour)], padx=5, bg='gray91')
+		save_button.grid(row=10, column=2, sticky=tk.W, pady=25)
 
 		popup.mainloop()
 
@@ -338,7 +338,6 @@ saturday_Label.grid(row=0, column=6)
 
 heading_frame.grid(row=1, column=0, columnspan=5, sticky=tk.W)
 
-
 def update_month(choice):
 	global current_frame
 	new_month = choices.index(month_choice.get()) + 1
@@ -377,11 +376,9 @@ for x in month_nums:
 	command = "place_days({}.start_pos, {}.start_day, {}.num_of_days)".format(month, month, month)
 	exec(command)
 
-
 current_frame = int(currentMonth)
 command3 = "frame{}.grid(row=2, column=0, columnspan=5)".format(current_frame)
 exec(command3)
 month_choice.set(choices[(current_frame - 1)])
-
 
 root.mainloop()
