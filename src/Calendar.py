@@ -309,12 +309,12 @@ def init_months():
 	april = create_months(30, 3, 4, 92)
 	may = create_months(31, 5, 5, 122)
 	june = create_months(30, 1, 6, 153)
-	july = create_months(31, 3, 7, 183)
-	august = create_months(31, 6, 8, 213)
-	september = create_months(30, 2, 9, 245)
-	october = create_months(31, 4, 10, 275)
-	november = create_months(30, 0, 11, 306)
-	december = create_months(31, 2, 12, 336)
+	july = create_months(32, 3, 7, 183)
+	august = create_months(32, 5, 8, 214)
+	september = create_months(30, 2, 9, 247)
+	october = create_months(31, 4, 10, 277)
+	november = create_months(30, 0, 11, 308)
+	december = create_months(31, 2, 12, 338)
 init_months()
 
 heading = tk.Label(root, font='Helvetica 22 bold', text="2020", pady=10)
@@ -364,7 +364,6 @@ def place_days(start_pos, start_day, num_of_days):
 		command = "day_{}.button.grid(row={}, column={})".format(x, row, col)
 		exec(command)
 		col += 1
-
 		command2 = "day_{}.col = {}".format(x, col)
 		exec(command2, globals())
 
